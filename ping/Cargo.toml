@@ -1,9 +1,0 @@
-[package]
-name = "ping"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-iptools = "0.3.0"
-pnet = "0.35.0"
-pnet_packet = "0.35.0"
