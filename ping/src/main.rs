@@ -149,7 +149,7 @@ mod networking {
             let mut packet_iter = transport::icmp_packet_iter(&mut receiver);
 
             match packet_iter.next_with_timeout(timeout) {
-                // If nothing was received in our time frame
+                // If nothing was received within the time frame
                 Ok(None) => println!("Request timed out."), 
 
                 // How fun, something came back
