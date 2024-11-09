@@ -144,6 +144,8 @@ mod networking {
                 }
             }
 
+            let now = std::time::Instant::now();
+
             sender.send_to(icmp_packet, destination).unwrap();
 
             packets_transmitted += 1;
@@ -165,7 +167,7 @@ mod networking {
                         
 
 
-                        println!("{} bytes from {}: icmp_seq={} ttl={} " , ret_packet_size, ret_packet_addr, seq, ttl);
+                        println!("{} bytes from {}: icmp_seq={} ttl={} time={} ms " , ret_packet_size, ret_packet_addr, seq, ttl, now.elapsed().as_secs_f32() * 1000 as f32);
                     }                   
 
                 },
