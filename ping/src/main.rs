@@ -41,8 +41,7 @@ mod networking {
     use pnet_packet::icmp::{echo_request, IcmpTypes, IcmpCode};
     use pnet_packet::{MutablePacket};
     use pnet::transport;
-    use pnet::packet::PacketSize;
-
+    use pnet::packet::{Packet};
     use std::process;
     use std::{thread, time}; 
     use std::str::FromStr;
@@ -123,7 +122,8 @@ mod networking {
             icmp_packet.set_checksum(checksum_value);
 
             // Set TTL(Time to live) to 64
-            sender.set_ttl(64).unwrap();
+            let ttl: u8 = 64;
+            sender.set_ttl(ttl).unwrap();
 
             // Get packet size
             let packet_size = payload_size + 8;
@@ -146,7 +146,6 @@ mod networking {
 
             sender.send_to(icmp_packet, destination).unwrap();
 
-            println!("Sent ICMP Packet!");
             packets_transmitted += 1;
             
             let mut packet_iter = transport::icmp_packet_iter(&mut receiver);
@@ -161,10 +160,14 @@ mod networking {
                     let (ret_packet_struct, ret_packet_addr) = packet;
 
                     if ret_packet_struct.get_icmp_code() == pnet_packet::icmp::IcmpCode(0) && ret_packet_struct.get_icmp_type() == pnet_packet::icmp::IcmpType(0) {
-                        println!("Echo reply detected");
+                        let ret_packet = ret_packet_struct.packet();
+                        let ret_packet_size = ret_packet.len() * std::mem::size_of::<u8>();
+                        
+
+
+                        println!("{} bytes from {}: icmp_seq={} ttl={} " , ret_packet_size, ret_packet_addr, seq, ttl);
                     }                   
 
-                    //println!("Something came back.");
                 },
 
                 Err(e) => println!("Error: {}", e),
